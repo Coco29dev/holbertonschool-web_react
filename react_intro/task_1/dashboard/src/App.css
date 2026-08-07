@@ -6,9 +6,7 @@ body {
 
 body {
   display: flex;
-  box-sizing: border-box;
-  padding: 24px;
-  background-color: #2d2f3b;
+  background-color: #ffffff;
 }
 
 #root {
@@ -18,14 +16,13 @@ body {
 }
 
 .root-notifications {
-  margin-bottom: 40px;
+  padding: 20px 40px 0;
 }
 
 .App {
   display: flex;
   flex: 1;
   flex-direction: column;
-  background-color: #ffffff;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
