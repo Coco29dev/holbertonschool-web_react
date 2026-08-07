@@ -1,0 +1,13 @@
+.notification-items {
+  box-sizing: border-box;
+  padding: 12px 20px;
+  border: 2px dashed #e1003c;
+  background-color: #ffffff;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.notification-items p {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 1rem;
+}
