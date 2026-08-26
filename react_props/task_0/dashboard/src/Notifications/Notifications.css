@@ -1,0 +1,36 @@
+.notification-items {
+  box-sizing: border-box;
+  margin: 20px 40px 0;
+  padding: 12px 20px;
+  border: 2px dashed #e1003c;
+  background-color: #ffffff;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.notification-items p {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 1rem;
+}
+
+.notification-items ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.notification-items li {
+  font-size: 0.95rem;
+}
+
+.notification-items li[data-priority='default'] {
+  color: #1a3ce1;
+}
+
+.notification-items li[data-priority='urgent'] {
+  color: #e1003c;
+}
+
+.notification-items button img {
+  width: 12px;
+  height: 12px;
+}
