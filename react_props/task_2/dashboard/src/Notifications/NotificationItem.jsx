@@ -1,4 +1,4 @@
-function NotificationItem({ type = 'default', html = '', value = '' }) {
+function NotificationItem({ type = 'default', html, value = '' }) {
   const color = type === 'urgent' ? 'red' : 'blue';
 
   if (html) {
@@ -6,7 +6,7 @@ function NotificationItem({ type = 'default', html = '', value = '' }) {
       <li
         data-notification-type={type}
         style={{ color }}
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={html}
       />
     );
   }

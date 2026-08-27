@@ -21,4 +21,17 @@ describe('NotificationItem', () => {
     expect(li).toHaveAttribute('data-notification-type', 'urgent');
     expect(li).toHaveStyle({ color: 'red' });
   });
+
+  test('renders the html prop content via dangerouslySetInnerHTML', () => {
+    const { container } = render(
+      <NotificationItem
+        type="urgent"
+        html={{ __html: '<strong>Urgent requirement</strong> - complete by EOD' }}
+      />
+    );
+    const li = container.querySelector('li');
+
+    expect(li.querySelector('strong')).toHaveTextContent('Urgent requirement');
+    expect(li).toHaveTextContent('Urgent requirement - complete by EOD');
+  });
 });
