@@ -1,0 +1,44 @@
+.notifications-wrapper {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  z-index: 10;
+  text-align: right;
+}
+
+.notification-title {
+  margin-bottom: 4px;
+  color: #333333;
+  font-size: 0.85rem;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.notification-items {
+  box-sizing: border-box;
+  width: 320px;
+  padding: 12px 20px;
+  border: 2px dashed #e1003c;
+  background-color: #ffffff;
+  text-align: left;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.notification-items p {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 1rem;
+}
+
+.notification-items ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.notification-items li {
+  font-size: 0.95rem;
+}
+
+.notification-items button img {
+  width: 12px;
+  height: 12px;
+}
