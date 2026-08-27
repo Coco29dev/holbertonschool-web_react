@@ -1,0 +1,22 @@
+#CourseList {
+  width: calc(100% - 80px);
+  margin: 24px 40px;
+  border-collapse: collapse;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+#CourseList th,
+#CourseList td {
+  padding: 6px 12px;
+  border: 1px solid #999999;
+}
+
+#CourseList thead th,
+#CourseList tbody th {
+  font-weight: bold;
+  text-align: center;
+}
+
+#CourseList tbody td {
+  text-align: left;
+}
