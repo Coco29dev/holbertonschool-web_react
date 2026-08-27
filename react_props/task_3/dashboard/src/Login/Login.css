@@ -1,0 +1,13 @@
+.App-body {
+  flex: 1;
+  padding: 24px 40px;
+  border-bottom: 3px solid #e1003c;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.App-body p {
+  margin: 0;
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  text-align: left;
+}
