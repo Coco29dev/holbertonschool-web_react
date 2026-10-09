@@ -52,6 +52,43 @@ describe('Notifications', () => {
     consoleSpy.mockRestore();
   });
 
+  test('does not re-render when the length of the notifications prop stays the same', () => {
+    const { rerender } = render(
+      <Notifications displayDrawer notifications={testNotifications} />
+    );
+    const sameLengthNotifications = [
+      { id: 1, type: 'default', value: 'Different first notification' },
+      { id: 2, type: 'urgent', value: 'Different second notification' },
+      { id: 3, type: 'urgent', value: 'Different third notification' },
+    ];
+
+    rerender(
+      <Notifications displayDrawer notifications={sameLengthNotifications} />
+    );
+
+    expect(screen.getByText(/new course available/i)).toBeInTheDocument();
+    expect(
+      screen.queryByText(/different first notification/i)
+    ).not.toBeInTheDocument();
+  });
+
+  test('re-renders when the length of the notifications prop changes', () => {
+    const { rerender } = render(
+      <Notifications displayDrawer notifications={testNotifications} />
+    );
+    const longerNotifications = [
+      ...testNotifications,
+      { id: 4, type: 'default', value: 'Brand new notification' },
+    ];
+
+    rerender(
+      <Notifications displayDrawer notifications={longerNotifications} />
+    );
+
+    expect(screen.getByText(/brand new notification/i)).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(4);
+  });
+
   describe('when displayDrawer is false', () => {
     test('does not render the close button, the intro paragraph, or notification items', () => {
       render(
