@@ -1,4 +1,4 @@
-import { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
 import Login from '../Login/Login';
@@ -7,7 +7,7 @@ import Footer from '../Footer/Footer';
 import { getLatestNotification } from '../utils/utils';
 import './App.css';
 
-class App extends Component {
+class App extends React.Component {
   render() {
     const { isLoggedIn = false } = this.props;
 
