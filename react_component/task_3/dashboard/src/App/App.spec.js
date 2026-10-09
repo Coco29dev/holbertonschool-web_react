@@ -51,6 +51,28 @@ describe('App', () => {
     expect(document.getElementById('CourseList')).toBeInTheDocument();
   });
 
+  test('renders the News from the School title and paragraph by default', () => {
+    render(<App />);
+    expect(
+      screen.getByRole('heading', { level: 2, name: /news from the school/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/holberton school news goes here/i).tagName).toBe('P');
+  });
+
+  test('renders the Log in to continue title when logged out', () => {
+    render(<App />);
+    expect(
+      screen.getByRole('heading', { level: 2, name: /log in to continue/i })
+    ).toBeInTheDocument();
+  });
+
+  test('renders the Course list title when logged in', () => {
+    render(<App isLoggedIn />);
+    expect(
+      screen.getByRole('heading', { level: 2, name: /course list/i })
+    ).toBeInTheDocument();
+  });
+
   describe('when control and h are pressed', () => {
     let alertSpy;
 
