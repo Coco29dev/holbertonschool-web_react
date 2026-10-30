@@ -20,7 +20,7 @@ const countCalls = (url) =>
 
 async function respondWithNotifications() {
   await act(async () => {
-    mockAxios.mockResponseFor({ url: 'notifications.json' }, { data: notificationsData });
+    mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, { data: notificationsData });
   });
 }
 
@@ -188,7 +188,7 @@ describe('App', () => {
     test('fetches the notifications once when the app loads', async () => {
       render(<App />);
 
-      expect(countCalls('notifications.json')).toBe(1);
+      expect(countCalls('http://localhost:5173/notifications.json')).toBe(1);
 
       await respondWithNotifications();
 
@@ -207,11 +207,11 @@ describe('App', () => {
     test('fetches the courses again whenever the user changes', async () => {
       const user = userEvent.setup();
       render(<App />);
-      const initialCoursesCalls = countCalls('courses.json');
+      const initialCoursesCalls = countCalls('http://localhost:5173/courses.json');
 
       await logIn(user);
 
-      expect(countCalls('courses.json')).toBe(initialCoursesCalls + 1);
+      expect(countCalls('http://localhost:5173/courses.json')).toBe(initialCoursesCalls + 1);
 
       await respondWithCourses();
 
@@ -221,7 +221,7 @@ describe('App', () => {
 
       await user.click(screen.getByRole('link', { name: /logout/i }));
 
-      expect(countCalls('courses.json')).toBe(initialCoursesCalls + 2);
+      expect(countCalls('http://localhost:5173/courses.json')).toBe(initialCoursesCalls + 2);
     });
 
     test('does not fetch the notifications again when the user changes', async () => {
@@ -230,7 +230,7 @@ describe('App', () => {
 
       await logIn(user);
 
-      expect(countCalls('notifications.json')).toBe(1);
+      expect(countCalls('http://localhost:5173/notifications.json')).toBe(1);
     });
 
     test('does not update the state when the request fails', async () => {

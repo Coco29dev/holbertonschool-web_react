@@ -15,9 +15,9 @@ import { appReducer, initialState, APP_ACTIONS } from './appReducer';
 const LoginWithLogging = WithLogging(Login);
 const CourseListWithLogging = WithLogging(CourseList);
 
-// Relative URLs, so they resolve against the app's base path (see vite.config.js).
-const NOTIFICATIONS_URL = 'notifications.json';
-const COURSES_URL = 'courses.json';
+// Files served from the public folder by the Vite dev server (port 5173).
+const NOTIFICATIONS_URL = 'http://localhost:5173/notifications.json';
+const COURSES_URL = 'http://localhost:5173/courses.json';
 
 function logError(message, error) {
   if (process.env.NODE_ENV === 'development') {

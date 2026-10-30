@@ -1,6 +1,39 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import mockAxios from 'jest-mock-axios';
 import userEvent from '@testing-library/user-event';
 import App from './App';
+
+const notificationsData = [
+  { id: 1, type: 'default', value: 'New course available' },
+  { id: 2, type: 'urgent', value: 'New resume available' },
+  { id: 3, type: 'urgent', html: { __html: '' } },
+];
+
+const coursesData = [
+  { id: 1, name: 'ES6', credit: 60 },
+  { id: 2, name: 'Webpack', credit: 20 },
+  { id: 3, name: 'React', credit: 40 },
+];
+
+const countCalls = (url) =>
+  mockAxios.get.mock.calls.filter(([calledUrl]) => calledUrl === url).length;
+
+async function respondWithNotifications() {
+  await act(async () => {
+    mockAxios.mockResponseFor({ url: 'http://localhost:5173/notifications.json' }, { data: notificationsData });
+  });
+}
+
+async function respondWithCourses() {
+  await act(async () => {
+    mockAxios.mockResponse({ data: coursesData }, mockAxios.lastReqGet());
+  });
+}
+
+async function renderAppWithNotifications() {
+  render(<App />);
+  await respondWithNotifications();
+}
 
 async function logIn(user) {
   await user.type(screen.getByLabelText(/email/i), 'test@example.com');
@@ -9,6 +42,10 @@ async function logIn(user) {
 }
 
 describe('App', () => {
+  afterEach(() => {
+    mockAxios.reset();
+  });
+
   test('renders an h1 with the text School Dashboard', () => {
     render(<App />);
     expect(
@@ -122,8 +159,8 @@ describe('App', () => {
   });
 
   describe('notifications drawer', () => {
-    test('is displayed by default', () => {
-      render(<App />);
+    test('is displayed by default', async () => {
+      await renderAppWithNotifications();
       expect(
         screen.getByText(/here is the list of notifications/i)
       ).toBeInTheDocument();
@@ -137,13 +174,73 @@ describe('App', () => {
       ).not.toBeInTheDocument();
     });
 
-    test('handleDisplayDrawer displays the drawer again when "Your notifications" is clicked', () => {
-      render(<App />);
+    test('handleDisplayDrawer displays the drawer again when "Your notifications" is clicked', async () => {
+      await renderAppWithNotifications();
       fireEvent.click(screen.getByRole('button', { name: /close/i }));
       fireEvent.click(screen.getByText(/your notifications/i));
       expect(
         screen.getByText(/here is the list of notifications/i)
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('data fetching', () => {
+    test('fetches the notifications once when the app loads', async () => {
+      render(<App />);
+
+      expect(countCalls('http://localhost:5173/notifications.json')).toBe(1);
+
+      await respondWithNotifications();
+
+      expect(screen.getAllByRole('listitem')).toHaveLength(3);
+      expect(screen.getByText(/new course available/i)).toBeInTheDocument();
+    });
+
+    test('keeps the special handling of the latest notification', async () => {
+      await renderAppWithNotifications();
+
+      expect(screen.getByText(/urgent requirement/i).closest('li')).toHaveTextContent(
+        'Urgent requirement - complete by EOD'
+      );
+    });
+
+    test('fetches the courses again whenever the user changes', async () => {
+      const user = userEvent.setup();
+      render(<App />);
+      const initialCoursesCalls = countCalls('http://localhost:5173/courses.json');
+
+      await logIn(user);
+
+      expect(countCalls('http://localhost:5173/courses.json')).toBe(initialCoursesCalls + 1);
+
+      await respondWithCourses();
+
+      expect(screen.getByText('ES6')).toBeInTheDocument();
+      expect(screen.getByText('Webpack')).toBeInTheDocument();
+      expect(screen.getByText('React')).toBeInTheDocument();
+
+      await user.click(screen.getByRole('link', { name: /logout/i }));
+
+      expect(countCalls('http://localhost:5173/courses.json')).toBe(initialCoursesCalls + 2);
+    });
+
+    test('does not fetch the notifications again when the user changes', async () => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      await logIn(user);
+
+      expect(countCalls('http://localhost:5173/notifications.json')).toBe(1);
+    });
+
+    test('does not update the state when the request fails', async () => {
+      render(<App />);
+
+      await act(async () => {
+        mockAxios.mockError(new Error('Network Error'), mockAxios.lastReqGet());
+      });
+
+      expect(screen.getByText(/no new notification for now/i)).toBeInTheDocument();
     });
   });
 
@@ -174,9 +271,9 @@ describe('App', () => {
   });
 
   describe('markNotificationAsRead', () => {
-    test('removes the clicked notification and logs its id', () => {
+    test('removes the clicked notification and logs its id', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-      render(<App />);
+      await renderAppWithNotifications();
       expect(screen.getAllByRole('listitem')).toHaveLength(3);
 
       fireEvent.click(screen.getByText(/new resume available/i));
