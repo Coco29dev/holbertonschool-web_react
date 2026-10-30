@@ -13,3 +13,4 @@ functional components and hooks instead of ES6 classes and lifecycle methods.
 | [task_3](task_3) | Update the Notifications component |
 | [task_4](task_4) | Modernizing the Parent and fetching data with axios |
 | [task_5](task_5) | Custom React hook |
+| [task_6](task_6) | Reducer |
