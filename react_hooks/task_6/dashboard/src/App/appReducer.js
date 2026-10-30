@@ -31,7 +31,7 @@ export function appReducer(state = initialState, action) {
       return { ...state, user: { email, password, isLoggedIn: true } };
     }
     case APP_ACTIONS.LOGOUT:
-      return { ...state, user: { ...initialState.user } };
+      return { ...state, user: initialState.user };
     case APP_ACTIONS.TOGGLE_DRAWER:
       // An explicit boolean payload sets the visibility, otherwise it toggles.
       return {
