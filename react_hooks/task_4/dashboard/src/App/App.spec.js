@@ -199,7 +199,7 @@ describe('App', () => {
     test('keeps the special handling of the latest notification', async () => {
       await renderAppWithNotifications();
 
-      expect(screen.getByText(/urgent requirement/i)).toHaveTextContent(
+      expect(screen.getByText(/urgent requirement/i).closest('li')).toHaveTextContent(
         'Urgent requirement - complete by EOD'
       );
     });
