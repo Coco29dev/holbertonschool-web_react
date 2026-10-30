@@ -1,6 +1,4 @@
-/* global process */
-import { useState, useEffect, useCallback, useMemo, useContext } from 'react';
-import axios from 'axios';
+import { useState, useCallback, useMemo, useContext } from 'react';
 import Notifications from '../Notifications/Notifications';
 import Header from '../Header/Header';
 import Login from '../Login/Login';
@@ -15,15 +13,17 @@ import newContext from '../Context/context';
 const LoginWithLogging = WithLogging(Login);
 const CourseListWithLogging = WithLogging(CourseList);
 
-// Relative URLs, so they resolve against the app's base path (see vite.config.js).
-const NOTIFICATIONS_URL = 'notifications.json';
-const COURSES_URL = 'courses.json';
+const notificationsList = [
+  { id: 1, type: 'default', value: 'New course available' },
+  { id: 2, type: 'urgent', value: 'New resume available' },
+  { id: 3, type: 'urgent', html: { __html: getLatestNotification() } },
+];
 
-function logError(message, error) {
-  if (process.env.NODE_ENV === 'development') {
-    console.error(message, error);
-  }
-}
+const coursesList = [
+  { id: 1, name: 'ES6', credit: 60 },
+  { id: 2, name: 'Webpack', credit: 20 },
+  { id: 3, name: 'React', credit: 40 },
+];
 
 function App() {
   // App renders the Provider and is not wrapped by one, so this gives the
@@ -32,59 +32,7 @@ function App() {
 
   const [displayDrawer, setDisplayDrawer] = useState(true);
   const [user, setUser] = useState(defaultUser);
-  const [notifications, setNotifications] = useState([]);
-  const [courses, setCourses] = useState([]);
-
-  // Notifications are needed as soon as the app loads.
-  useEffect(() => {
-    let ignore = false;
-
-    const fetchNotifications = async () => {
-      try {
-        const { data } = await axios.get(NOTIFICATIONS_URL);
-        if (!ignore) {
-          setNotifications(
-            data.map((notification) =>
-              notification.html
-                ? { ...notification, html: { __html: getLatestNotification() } }
-                : notification
-            )
-          );
-        }
-      } catch (error) {
-        logError('Failed to fetch notifications:', error);
-      }
-    };
-
-    fetchNotifications();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  // Courses depend on the authentication state, so they are fetched again
-  // whenever the user changes.
-  useEffect(() => {
-    let ignore = false;
-
-    const fetchCourses = async () => {
-      try {
-        const { data } = await axios.get(COURSES_URL);
-        if (!ignore) {
-          setCourses(data);
-        }
-      } catch (error) {
-        logError('Failed to fetch courses:', error);
-      }
-    };
-
-    fetchCourses();
-
-    return () => {
-      ignore = true;
-    };
-  }, [user]);
+  const [notifications, setNotifications] = useState(notificationsList);
 
   const handleDisplayDrawer = useCallback(() => {
     setDisplayDrawer(true);
@@ -126,7 +74,7 @@ function App() {
         <Header />
         {user.isLoggedIn ? (
           <BodySectionWithMarginBottom title="Course list">
-            <CourseListWithLogging courses={courses} />
+            <CourseListWithLogging courses={coursesList} />
           </BodySectionWithMarginBottom>
         ) : (
           <BodySectionWithMarginBottom title="Log in to continue">
