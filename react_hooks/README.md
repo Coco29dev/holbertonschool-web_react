@@ -10,3 +10,4 @@ functional components and hooks instead of ES6 classes and lifecycle methods.
 | [task_0](task_0) | Convert Header Component |
 | [task_1](task_1) | Convert Login component |
 | [task_2](task_2) | Update the NotificationItem component |
+| [task_3](task_3) | Update the Notifications component |
