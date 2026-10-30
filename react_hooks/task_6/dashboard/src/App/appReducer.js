@@ -18,17 +18,18 @@ export const initialState = {
   courses: [],
 };
 
+// Payloads can be given either bare (an id, a list) or wrapped in an object.
+const getList = (payload, key) =>
+  Array.isArray(payload) ? payload : (payload?.[key] ?? []);
+const getId = (payload) =>
+  payload !== null && typeof payload === 'object' ? payload.id : payload;
+
 export function appReducer(state = initialState, action) {
   switch (action.type) {
-    case APP_ACTIONS.LOGIN:
-      return {
-        ...state,
-        user: {
-          email: action.payload.email,
-          password: action.payload.password,
-          isLoggedIn: true,
-        },
-      };
+    case APP_ACTIONS.LOGIN: {
+      const { email = '', password = '' } = action.payload?.user ?? action.payload ?? {};
+      return { ...state, user: { email, password, isLoggedIn: true } };
+    }
     case APP_ACTIONS.LOGOUT:
       return { ...state, user: { ...initialState.user } };
     case APP_ACTIONS.TOGGLE_DRAWER:
@@ -44,13 +45,13 @@ export function appReducer(state = initialState, action) {
       return {
         ...state,
         notifications: state.notifications.filter(
-          (notification) => notification.id !== action.payload.id
+          (notification) => notification.id !== getId(action.payload)
         ),
       };
     case APP_ACTIONS.SET_NOTIFICATIONS:
-      return { ...state, notifications: action.payload };
+      return { ...state, notifications: getList(action.payload, 'notifications') };
     case APP_ACTIONS.SET_COURSES:
-      return { ...state, courses: action.payload };
+      return { ...state, courses: getList(action.payload, 'courses') };
     default:
       return state;
   }
